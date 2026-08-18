@@ -99,27 +99,20 @@ function searchDocuments() {
             .toLowerCase()
             .trim();
 
-
     if (!search) {
-
         displayLibrary();
-
         return;
     }
 
-
     const results = [];
 
-
     library.forEach(folder => {
-
         const matchingDocuments =
             folder.documents.filter(documentName =>
                 documentName
                     .toLowerCase()
                     .includes(search)
             );
-
 
         if (
             folder.name
@@ -137,9 +130,7 @@ function searchDocuments() {
                         ? matchingDocuments
                         : folder.documents
             });
-
         }
-
     });
 
 
@@ -161,34 +152,21 @@ function initializeGoogleAuthentication() {
         console.log("Google Identity Services not loaded yet.");
         return;
     }
-
-
-    tokenClient =
-        google.accounts.oauth2.initTokenClient({
-
+    tokenClient =  google.accounts.oauth2.initTokenClient({
             client_id: CLIENT_ID,
-
             scope: DRIVE_SCOPE,
-
             callback: async (response) => {
-
                 if (response.error) {
-
-                    console.error(
-                        "Google authentication error:",
+                    console.error( "Google authentication error:",
                         response
                     );
-
                     updateStatus(
                         "Google authentication failed."
                     );
-
                     return;
                 }
 
-
-                accessToken =
-                    response.access_token;
+                accessToken = response.access_token;
 
                 updateStatus(
                     "✓ Google authentication successful"
@@ -205,9 +183,7 @@ function initializeGoogleAuthentication() {
                 ).textContent =
                     "✓ Google Connected";
 
-
                 await findWatchtechFolder();
-
             }
 
         });
@@ -220,28 +196,18 @@ function initializeGoogleAuthentication() {
 // --------------------------------------------------
 
 function signInWithGoogle() {
-
     if (!tokenClient) {
-
         initializeGoogleAuthentication();
-
     }
-
-
     if (!tokenClient) {
-
-        alert(
-            "Google authentication is still loading. Please wait a few seconds and try again."
+        alert( "Google authentication is still loading. Please wait a few seconds and try again."
         );
-
         return;
     }
-
 
     tokenClient.requestAccessToken({
         prompt: "consent"
     });
-
 }
 
 
@@ -269,8 +235,7 @@ async function findWatchtechFolder() {
                 }
             });
         if (!response.ok) {
-            throw new Error(
-                `Drive API returned ${response.status}`
+            throw new Error( `Drive API returned ${response.status}`
             );
         }
         const data =
@@ -294,7 +259,7 @@ async function findWatchtechFolder() {
             watchtechFolder
         );
         // Get the folders inside Watchtech Docs
-        await loadWatchTechDocs(
+        await loadDriveFolders(
             watchtechFolder.id
         );
 
@@ -312,106 +277,6 @@ async function findWatchtechFolder() {
     }
 }
 
-async function loadWatchTechDocs() {
-  const status = document.getElementById("status");
-  const library = document.getElementById("library");
-
-  status.textContent = "Finding WatchTech Docs...";
-  library.innerHTML = "";
-
-  // 1. Find the main WatchTech Docs folder
-  const rootResponse = await gapi.client.drive.files.list({
-    q:
-      "name = 'WatchTech Docs' " +
-      "and mimeType = 'application/vnd.google-apps.folder' " +
-      "and 'root' in parents " +
-      "and trashed = false",
-    fields: "files(id, name)",
-    spaces: "drive"
-  });
-
-  const rootFolders = rootResponse.result.files || [];
-
-  if (!rootFolders.length) {
-    status.textContent = "WatchTech Docs folder not found.";
-    return;
-  }
-
-  const watchTechFolder = rootFolders[0];
-
-  console.log("WatchTech Docs:", watchTechFolder);
-
-  // 2. Find the ATM folder inside WatchTech Docs
-  status.textContent = "Finding ATM...";
-
-  const atmResponse = await gapi.client.drive.files.list({
-    q:
-      `'${watchTechFolder.id}' in parents ` +
-      "and name = 'ATM' " +
-      "and mimeType = 'application/vnd.google-apps.folder' " +
-      "and trashed = false",
-    fields: "files(id, name)",
-    spaces: "drive"
-  });
-
-  const atmFolders = atmResponse.result.files || [];
-
-  if (!atmFolders.length) {
-    status.textContent = "ATM folder not found.";
-    return;
-  }
-
-  const atmFolder = atmFolders[0];
-
-  console.log("ATM folder:", atmFolder);
-
-  // 3. Get the actual files inside ATM
-  status.textContent = "Loading ATM documents...";
-
-  const filesResponse = await gapi.client.drive.files.list({
-    q:
-      `'${atmFolder.id}' in parents ` +
-      "and mimeType != 'application/vnd.google-apps.folder' " +
-      "and trashed = false",
-    fields: "files(id, name, mimeType, webViewLink)",
-    orderBy: "name",
-    spaces: "drive"
-  });
-
-  const files = filesResponse.result.files || [];
-
-  console.log("ATM files:", files);
-
-  if (!files.length) {
-    status.textContent = "ATM folder is empty.";
-    return;
-  }
-
-  // 4. Display the documents
-  status.textContent = `ATM — ${files.length} document(s)`;
-
-  const heading = document.createElement("h2");
-  heading.textContent = "📁 ATM";
-  library.appendChild(heading);
-
-  files.forEach(file => {
-    const item = document.createElement("div");
-    item.className = "document-item";
-
-    const link = document.createElement("a");
-
-    link.href = file.webViewLink || 
-      `https://drive.google.com/file/d/${file.id}/view`;
-
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-
-    link.textContent = `📄 ${file.name}`;
-
-    item.appendChild(link);
-    library.appendChild(item);
-  });
-}
 
 async function loadDriveFolders(parentFolderId) {
     try {
@@ -467,36 +332,141 @@ async function loadDriveFolders(parentFolderId) {
 }
 
 function displayDriveFolders(folders) {
-    const container =
-        document.getElementById("library");
+    const container =   document.getElementById("library");
 
     container.innerHTML = "";
+
     if (folders.length === 0) {
-        container.innerHTML =            `
+        container.innerHTML = `
             <div class="folder">
-                📂 No folders found inside Watchtech Docs.
+                📂 No folders found inside WatchTech Docs.
             </div>
-            `;
+        `;
         return;
     }
 
     folders.forEach(folder => {
-        const folderElement =
-            document.createElement("div");
-        folderElement.className =
-            "folder";
-        folderElement.innerHTML =
-            `
+        const folderElement = document.createElement("div");
+        folderElement.className = "folder";
+        folderElement.innerHTML = `
             <span class="folder-icon">📁</span>
             ${escapeHtml(folder.name)}
-            `;
-        folderElement.dataset.folderId =
-            folder.id;
+        `;
+
+        folderElement.dataset.folderId =  folder.id;
+
+        // Open this folder when clicked
+        folderElement.addEventListener(
+            "click",
+            () => loadDriveFiles(folder.id, folder.name)
+        );
+        container.appendChild(folderElement);
+    });
+}
+
+async function loadDriveFiles(folderId, folderName) {
+    try {
+        updateStatus(
+            `Loading ${folderName}...`
+        );
+        const query =
+            `'${folderId}' in parents ` +
+            "and mimeType != 'application/vnd.google-apps.folder' " +
+            "and trashed = false";
+        const url =
+            "https://www.googleapis.com/drive/v3/files" +
+            "?q=" +
+            encodeURIComponent(query) +
+            "&orderBy=name" +
+            "&fields=files(id,name,mimeType,webViewLink)";
+        const response =
+            await fetch(url, {
+                headers: {
+                    Authorization:
+                        `Bearer ${accessToken}`
+                }
+            });
+
+        if (!response.ok) {
+            throw new Error(
+                `Drive API returned ${response.status}`
+            );
+        }
+
+        const data =  await response.json();
+
+        console.log(  `Files inside ${folderName}:`, data );
+
+        displayDriveFiles(
+            data.files || [],
+            folderName
+        );
+        updateStatus(
+            `✓ ${folderName} — ${
+                (data.files || []).length
+            } document(s)`
+        );
+    }
+    catch (error) {
+        console.error(
+            "File loading error:",
+            error
+        );
+        updateStatus(
+            `Could not load files from ${folderName}.`
+        );
+    }
+}
+
+function displayDriveFiles(files, folderName) {
+    const container = document.getElementById("library");
+
+    container.innerHTML = "";
+
+    const heading = document.createElement("div");
+
+    heading.className = "folder";
+    heading.innerHTML = `
+        <span class="folder-icon">📁</span>
+        ${escapeHtml(folderName)}
+    `;
+
+    container.appendChild(heading);
+    if (files.length === 0) {
+        const emptyMessage = document.createElement("div");
+
+        emptyMessage.className = "document";
+
+        emptyMessage.textContent = "📂 This folder is empty.";
+
         container.appendChild(
-            folderElement
+            emptyMessage        );
+        return;
+    }
+
+    files.forEach(file => {
+
+        const documentElement =
+            document.createElement("div");
+
+        documentElement.className = "document";
+        const link = document.createElement("a");
+
+        link.href = file.webViewLink || `https://drive.google.com/file/d/${file.id}/view`;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+
+        link.textContent =
+            `📄 ${file.name}`;
+        documentElement.appendChild(
+            link
+        );
+        container.appendChild(
+            documentElement
         );
     });
 }
+
 
 function escapeHtml(text) {
     const div =  document.createElement("div");
