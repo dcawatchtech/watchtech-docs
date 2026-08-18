@@ -294,7 +294,7 @@ async function findWatchtechFolder() {
             watchtechFolder
         );
         // Get the folders inside Watchtech Docs
-        await loadDriveFolders(
+        await loadWatchTechDocs(
             watchtechFolder.id
         );
 
