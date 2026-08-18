@@ -7,6 +7,10 @@ const DRIVE_SCOPE =
 let accessToken = null;
 let tokenClient = null;
 
+let folderHistory = [];
+let currentFolder = null;
+
+let watchtechRootFolderId = null;
 
 // --------------------------------------------------
 // DEMO LIBRARY
@@ -248,6 +252,8 @@ async function findWatchtechFolder() {
             return;
         }
         const watchtechFolder = data.files[0];
+        watchtechRootFolderId = watchtechFolder.id;
+        
         updateStatus( "✓ Watchtech Docs folder found" );
 
         document.getElementById(
@@ -358,10 +364,38 @@ function displayDriveFolders(folders) {
         // Open this folder when clicked
         folderElement.addEventListener(
             "click",
-            () => loadDriveFiles(folder.id, folder.name)
+            () => openFolder(folder.id, folder.name)
         );
         container.appendChild(folderElement);
     });
+}
+
+async function openFolder(folderId, folderName) {
+    if (currentFolder) {
+        folderHistory.push(currentFolder);
+    }
+    currentFolder = {
+        id: folderId,
+        name: folderName
+    };
+    await loadDriveFiles(
+        folderId,
+        folderName
+    );
+}
+
+async function goBack() {
+    if (folderHistory.length === 0) {
+        return;
+    }
+    const previousFolder = folderHistory.pop();
+
+    currentFolder = previousFolder;
+
+    await loadDriveFiles(
+        previousFolder.id,
+        previousFolder.name
+    );
 }
 
 async function loadDriveFiles(folderId, folderName) {
@@ -466,7 +500,7 @@ function displayDriveFiles(items, folderName) {
 
             element.addEventListener(
                 "click",
-                () => loadDriveFiles(
+                () => openFolder(
                     item.id,
                     item.name
                 )
@@ -545,3 +579,99 @@ document.addEventListener(
 
     }
 );
+
+function displayBreadcrumbs() {
+    const container =
+        document.getElementById(
+            "breadcrumbs"
+        );
+    if (!container) {
+        return;
+    }
+    container.innerHTML = "";
+
+    const home =   document.createElement("button");
+
+    home.textContent = "🏠 WatchTech Docs";
+
+    home.addEventListener(
+        "click",
+        goHome
+    );
+
+    container.appendChild(home);
+
+    folderHistory.forEach(
+        (folder, index) => {
+            const separator =  document.createElement("span");
+
+            separator.textContent = " › ";
+
+            container.appendChild(
+                separator
+            );
+            const button = document.createElement( "button"
+                );
+
+            button.textContent =  folder.name;
+            button.addEventListener(
+                "click",
+                () => goToHistoryFolder(
+                    index
+                )
+            );
+            container.appendChild(
+                button
+            );
+        }
+    );
+
+    if (currentFolder) {
+        const separator =   document.createElement("span");
+
+        separator.textContent =" › ";
+
+        container.appendChild(
+            separator
+        );
+
+        const current =
+            document.createElement(
+                "span"
+            );
+        current.textContent =
+            currentFolder.name;
+
+        container.appendChild(
+            current
+        );
+    }
+}
+
+async function goToHistoryFolder(index) {
+
+    const folder =
+        folderHistory[index];
+
+    folderHistory =
+        folderHistory.slice(0, index);
+
+    currentFolder = folder;
+
+    await loadDriveFiles(
+        folder.id,
+        folder.name
+    );
+}
+
+async function goHome() {
+
+    folderHistory = [];
+
+    currentFolder = null;
+
+    await loadDriveFolders(
+        watchtechRootFolderId
+    );
+}
+
