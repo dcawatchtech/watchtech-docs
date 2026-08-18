@@ -252,21 +252,78 @@ function signInWithGoogle() {
 async function findWatchtechFolder() {
 
     try {
-
+        // Find the Watchtech Docs folder in the root of My Drive
         const query =
             "name = 'WatchTech Docs' " +
             "and mimeType = 'application/vnd.google-apps.folder' " +
             "and 'root' in parents " +
             "and trashed = false";
-
-
         const url =
             "https://www.googleapis.com/drive/v3/files" +
             "?q=" +
             encodeURIComponent(query) +
             "&fields=files(id,name,mimeType,parents)";
+        const response =
+            await fetch(url, {
+                headers: { Authorization: `Bearer ${accessToken}`
+                }
+            });
+        if (!response.ok) {
+            throw new Error(
+                `Drive API returned ${response.status}`
+            );
+        }
+        const data =
+            await response.json();
+        console.log(
+            "Watchtech Docs search result:",   data
+        );
+        if (!data.files || data.files.length === 0) {
+            updateStatus("Google connected, but Watchtech Docs was not found." );
+            return;
+        }
+        const watchtechFolder = data.files[0];
+        updateStatus( "✓ Watchtech Docs folder found" );
 
+        document.getElementById(
+            "driveStatus"
+        ).textContent =
+            "Watchtech Docs found";
+        console.log(
+            "WATCHTECH DOCS ROOT:",
+            watchtechFolder
+        );
+        // Get the folders inside Watchtech Docs
+        await loadDriveFolders(
+            watchtechFolder.id
+        );
 
+    }
+
+    catch (error) {
+        console.error(
+            "Drive error:",
+            error
+        );
+
+        updateStatus(
+            "Google connected, but Drive access failed."
+        );
+    }
+}
+
+async function loadDriveFolders(parentFolderId) {
+    try {
+        const query =
+            `'${parentFolderId}' in parents ` +
+            "and mimeType = 'application/vnd.google-apps.folder' " +
+            "and trashed = false";
+        const url =
+            "https://www.googleapis.com/drive/v3/files" +
+            "?q=" +
+            encodeURIComponent(query) +
+            "&orderBy=name" +
+            "&fields=files(id,name,mimeType,parents)";
         const response =
             await fetch(url, {
 
@@ -276,77 +333,76 @@ async function findWatchtechFolder() {
                 }
 
             });
-
-
         if (!response.ok) {
-
             throw new Error(
                 `Drive API returned ${response.status}`
             );
-
         }
-
-
         const data =
             await response.json();
-
-
         console.log(
-            "Watchtech Docs search result:",
+            "Folders inside Watchtech Docs:",
             data
         );
 
-
-        if (!data.files || data.files.length === 0) {
-
-            updateStatus(
-                "Google connected, but the Watchtech Docs folder was not found."
-            );
-
-            return;
-        }
-
-
-        const watchtechFolder =
-            data.files[0];
-
-
+        displayDriveFolders(
+            data.files || []
+        );
         updateStatus(
-            `✓ Watchtech Docs folder found`
+            `✓ Google Drive connected — ${
+                (data.files || []).length
+            } folder(s) found`
         );
-
-
-        document.getElementById(
-            "driveStatus"
-        ).textContent =
-            "Watchtech Docs found";
-
-
-        console.log(
-            "WATCHTECH DOCS ROOT:",
-            watchtechFolder
-        );
-
-
-        // The next stage will read the contents
-        // of this folder.
-
     }
-
     catch (error) {
-
         console.error(
-            "Drive error:",
+            "Folder loading error:",
             error
         );
-
         updateStatus(
-            "Google connected, but Drive access failed."
+            "Watchtech Docs was found, but its folders could not be loaded."
         );
+    }
+}
 
+function displayDriveFolders(folders) {
+    const container =
+        document.getElementById("library");
+
+    container.innerHTML = "";
+    if (folders.length === 0) {
+        container.innerHTML =            `
+            <div class="folder">
+                📂 No folders found inside Watchtech Docs.
+            </div>
+            `;
+        return;
     }
 
+    folders.forEach(folder => {
+        const folderElement =
+            document.createElement("div");
+        folderElement.className =
+            "folder";
+        folderElement.innerHTML =
+            `
+            <span class="folder-icon">📁</span>
+            ${escapeHtml(folder.name)}
+            `;
+        folderElement.dataset.folderId =
+            folder.id;
+        container.appendChild(
+            folderElement
+        );
+    });
 }
+
+function escapeHtml(text) {
+    const div =  document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
+}
+
 function updateStatus(message) {
 
     document.getElementById(
