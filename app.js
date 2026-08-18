@@ -1,14 +1,18 @@
-const library = [
-    {
-        type: "folder",
-        name: "ROLEX",
-        documents: [
-            "Rolex 3135 Service Manual",
-            "Rolex 3235 Service Manual",
-            "Rolex 4130 Service Manual"
-        ]
-    },
+const CLIENT_ID =
+    "716795580682-q00ag4tecj35b49q4tnk2prub01pgd1r.apps.googleusercontent.com";
 
+const DRIVE_SCOPE =
+    "https://www.googleapis.com/auth/drive.readonly";
+
+let accessToken = null;
+let tokenClient = null;
+
+
+// --------------------------------------------------
+// DEMO LIBRARY
+// --------------------------------------------------
+
+const library = [
     {
         type: "folder",
         name: "OMEGA",
@@ -20,23 +24,27 @@ const library = [
 
     {
         type: "folder",
-        name: "ETA",
+        name: "ROLEX",
         documents: [
-            "ETA 2824 Technical Manual",
-            "ETA 7750 Technical Manual"
+            "Rolex 3135 Service Manual",
+            "Rolex 3235 Service Manual"
         ]
     },
 
     {
         type: "folder",
-        name: "SELLITA",
+        name: "ETA",
         documents: [
-            "SW200 Technical Manual",
-            "SW300 Technical Manual"
+            "ETA 2824 Technical Manual",
+            "ETA 7750 Technical Manual"
         ]
     }
 ];
 
+
+// --------------------------------------------------
+// DISPLAY DEMO LIBRARY
+// --------------------------------------------------
 
 function displayLibrary(data = library) {
 
@@ -44,7 +52,6 @@ function displayLibrary(data = library) {
         document.getElementById("library");
 
     container.innerHTML = "";
-
 
     data.forEach(folder => {
 
@@ -65,8 +72,7 @@ function displayLibrary(data = library) {
             const documentElement =
                 document.createElement("div");
 
-            documentElement.className =
-                "document";
+            documentElement.className = "document";
 
             documentElement.innerHTML =
                 `<span class="document-icon">📄</span>
@@ -77,9 +83,12 @@ function displayLibrary(data = library) {
         });
 
     });
-
 }
 
+
+// --------------------------------------------------
+// SEARCH
+// --------------------------------------------------
 
 function searchDocuments() {
 
@@ -96,7 +105,6 @@ function searchDocuments() {
         displayLibrary();
 
         return;
-
     }
 
 
@@ -136,17 +144,253 @@ function searchDocuments() {
 
 
     displayLibrary(results);
+}
+
+
+// --------------------------------------------------
+// GOOGLE AUTHENTICATION
+// --------------------------------------------------
+
+function initializeGoogleAuthentication() {
+
+    if (
+        typeof google === "undefined" ||
+        !google.accounts ||
+        !google.accounts.oauth2
+    ) {
+        console.log("Google Identity Services not loaded yet.");
+        return;
+    }
+
+
+    tokenClient =
+        google.accounts.oauth2.initTokenClient({
+
+            client_id: CLIENT_ID,
+
+            scope: DRIVE_SCOPE,
+
+            callback: async (response) => {
+
+                if (response.error) {
+
+                    console.error(
+                        "Google authentication error:",
+                        response
+                    );
+
+                    updateStatus(
+                        "Google authentication failed."
+                    );
+
+                    return;
+                }
+
+
+                accessToken =
+                    response.access_token;
+
+                updateStatus(
+                    "✓ Google authentication successful"
+                );
+
+                document.getElementById(
+                    "driveStatus"
+                ).textContent =
+                    "Connected";
+
+
+                document.getElementById(
+                    "googleSignInButton"
+                ).textContent =
+                    "✓ Google Connected";
+
+
+                await findWatchtechFolder();
+
+            }
+
+        });
 
 }
 
 
-function syncLibrary() {
+// --------------------------------------------------
+// GOOGLE LOGIN BUTTON
+// --------------------------------------------------
 
-    alert(
-        "Google Drive synchronization will be added in the next stage."
-    );
+function signInWithGoogle() {
+
+    if (!tokenClient) {
+
+        initializeGoogleAuthentication();
+
+    }
+
+
+    if (!tokenClient) {
+
+        alert(
+            "Google authentication is still loading. Please wait a few seconds and try again."
+        );
+
+        return;
+    }
+
+
+    tokenClient.requestAccessToken({
+        prompt: "consent"
+    });
 
 }
 
+
+// --------------------------------------------------
+// FIND WATCHTECH FOLDER
+// --------------------------------------------------
+
+async function findWatchtechFolder() {
+
+    try {
+
+        const query =
+            "name = 'Watchtech' " +
+            "and mimeType = 'application/vnd.google-apps.folder' " +
+            "and trashed = false";
+
+
+        const url =
+            "https://www.googleapis.com/drive/v3/files" +
+            "?q=" +
+            encodeURIComponent(query) +
+            "&fields=files(id,name,mimeType,parents)";
+
+
+        const response =
+            await fetch(url, {
+
+                headers: {
+                    Authorization:
+                        `Bearer ${accessToken}`
+                }
+
+            });
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                `Drive API returned ${response.status}`
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        console.log(
+            "Watchtech folder search result:",
+            data
+        );
+
+
+        if (!data.files || data.files.length === 0) {
+
+            updateStatus(
+                "Google connected, but the Watchtech folder was not found."
+            );
+
+            return;
+        }
+
+
+        const watchtechFolder =
+            data.files[0];
+
+
+        updateStatus(
+            `✓ Watchtech folder found: ${watchtechFolder.name}`
+        );
+
+
+        document.getElementById(
+            "driveStatus"
+        ).textContent =
+            "Watchtech folder found";
+
+
+        console.log(
+            "WATCHTECH FOLDER:",
+            watchtechFolder
+        );
+
+
+        // Next stage:
+        // Read the folders inside Watchtech.
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Drive error:",
+            error
+        );
+
+        updateStatus(
+            "Google connected, but Drive access failed."
+        );
+
+    }
+
+}
+
+
+// --------------------------------------------------
+// STATUS
+// --------------------------------------------------
+
+function updateStatus(message) {
+
+    document.getElementById(
+        "connectionStatus"
+    ).textContent = message;
+
+}
+
+
+// --------------------------------------------------
+// START APPLICATION
+// --------------------------------------------------
 
 displayLibrary();
+
+
+window.addEventListener(
+    "load",
+    () => {
+
+        setTimeout(
+            initializeGoogleAuthentication,
+            1000
+        );
+
+    }
+);
+
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        document
+            .getElementById("googleSignInButton")
+            .addEventListener(
+                "click",
+                signInWithGoogle
+            );
+
+    }
+);
