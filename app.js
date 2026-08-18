@@ -256,6 +256,7 @@ async function findWatchtechFolder() {
         const query =
             "name = 'WatchTech Docs' " +
             "and mimeType = 'application/vnd.google-apps.folder' " +
+            "and 'root' in parents " +
             "and trashed = false";
 
 
@@ -291,7 +292,7 @@ async function findWatchtechFolder() {
 
 
         console.log(
-            "Watchtech folder search result:",
+            "Watchtech Docs search result:",
             data
         );
 
@@ -299,7 +300,7 @@ async function findWatchtechFolder() {
         if (!data.files || data.files.length === 0) {
 
             updateStatus(
-                "Google connected, but the Watchtech folder was not found."
+                "Google connected, but the Watchtech Docs folder was not found."
             );
 
             return;
@@ -311,24 +312,24 @@ async function findWatchtechFolder() {
 
 
         updateStatus(
-            `✓ Watchtech folder found: ${watchtechFolder.name}`
+            `✓ Watchtech Docs folder found`
         );
 
 
         document.getElementById(
             "driveStatus"
         ).textContent =
-            "Watchtech folder found";
+            "Watchtech Docs found";
 
 
         console.log(
-            "WATCHTECH FOLDER:",
+            "WATCHTECH DOCS ROOT:",
             watchtechFolder
         );
 
 
-        // Next stage:
-        // Read the folders inside Watchtech.
+        // The next stage will read the contents
+        // of this folder.
 
     }
 
@@ -346,12 +347,6 @@ async function findWatchtechFolder() {
     }
 
 }
-
-
-// --------------------------------------------------
-// STATUS
-// --------------------------------------------------
-
 function updateStatus(message) {
 
     document.getElementById(
