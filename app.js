@@ -254,7 +254,7 @@ async function findWatchtechFolder() {
     try {
 
         const query =
-            "name = 'Watchtech' " +
+            "name = 'WatchTech Docs' " +
             "and mimeType = 'application/vnd.google-apps.folder' " +
             "and trashed = false";
 
