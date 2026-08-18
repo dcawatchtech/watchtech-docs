@@ -312,6 +312,107 @@ async function findWatchtechFolder() {
     }
 }
 
+async function loadWatchTechDocs() {
+  const status = document.getElementById("status");
+  const library = document.getElementById("library");
+
+  status.textContent = "Finding WatchTech Docs...";
+  library.innerHTML = "";
+
+  // 1. Find the main WatchTech Docs folder
+  const rootResponse = await gapi.client.drive.files.list({
+    q:
+      "name = 'WatchTech Docs' " +
+      "and mimeType = 'application/vnd.google-apps.folder' " +
+      "and 'root' in parents " +
+      "and trashed = false",
+    fields: "files(id, name)",
+    spaces: "drive"
+  });
+
+  const rootFolders = rootResponse.result.files || [];
+
+  if (!rootFolders.length) {
+    status.textContent = "WatchTech Docs folder not found.";
+    return;
+  }
+
+  const watchTechFolder = rootFolders[0];
+
+  console.log("WatchTech Docs:", watchTechFolder);
+
+  // 2. Find the ATM folder inside WatchTech Docs
+  status.textContent = "Finding ATM...";
+
+  const atmResponse = await gapi.client.drive.files.list({
+    q:
+      `'${watchTechFolder.id}' in parents ` +
+      "and name = 'ATM' " +
+      "and mimeType = 'application/vnd.google-apps.folder' " +
+      "and trashed = false",
+    fields: "files(id, name)",
+    spaces: "drive"
+  });
+
+  const atmFolders = atmResponse.result.files || [];
+
+  if (!atmFolders.length) {
+    status.textContent = "ATM folder not found.";
+    return;
+  }
+
+  const atmFolder = atmFolders[0];
+
+  console.log("ATM folder:", atmFolder);
+
+  // 3. Get the actual files inside ATM
+  status.textContent = "Loading ATM documents...";
+
+  const filesResponse = await gapi.client.drive.files.list({
+    q:
+      `'${atmFolder.id}' in parents ` +
+      "and mimeType != 'application/vnd.google-apps.folder' " +
+      "and trashed = false",
+    fields: "files(id, name, mimeType, webViewLink)",
+    orderBy: "name",
+    spaces: "drive"
+  });
+
+  const files = filesResponse.result.files || [];
+
+  console.log("ATM files:", files);
+
+  if (!files.length) {
+    status.textContent = "ATM folder is empty.";
+    return;
+  }
+
+  // 4. Display the documents
+  status.textContent = `ATM — ${files.length} document(s)`;
+
+  const heading = document.createElement("h2");
+  heading.textContent = "📁 ATM";
+  library.appendChild(heading);
+
+  files.forEach(file => {
+    const item = document.createElement("div");
+    item.className = "document-item";
+
+    const link = document.createElement("a");
+
+    link.href = file.webViewLink || 
+      `https://drive.google.com/file/d/${file.id}/view`;
+
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+
+    link.textContent = `📄 ${file.name}`;
+
+    item.appendChild(link);
+    library.appendChild(item);
+  });
+}
+
 async function loadDriveFolders(parentFolderId) {
     try {
         const query =
