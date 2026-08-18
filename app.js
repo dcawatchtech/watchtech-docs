@@ -45,6 +45,12 @@ const library = [
     }
 ];
 
+document
+    .getElementById("backButton")
+    .addEventListener(
+        "click",
+        goBack
+    );
 
 // --------------------------------------------------
 // DISPLAY DEMO LIBRARY
@@ -320,6 +326,7 @@ async function loadDriveFolders(parentFolderId) {
         displayDriveFolders(
             data.files || []
         );
+        displayBreadcrumbs();
         updateStatus(
             `✓ Google Drive connected — ${
                 (data.files || []).length
@@ -435,6 +442,7 @@ async function loadDriveFiles(folderId, folderName) {
             data.files || [],
             folderName
         );
+        displayBreadcrumbs();
         updateStatus(
             `✓ ${folderName} — ${
                 (data.files || []).length
