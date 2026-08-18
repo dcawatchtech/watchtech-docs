@@ -371,14 +371,14 @@ async function loadDriveFiles(folderId, folderName) {
         );
         const query =
             `'${folderId}' in parents ` +
-            "and mimeType != 'application/vnd.google-apps.folder' " +
+//            "and mimeType != 'application/vnd.google-apps.folder' " +
             "and trashed = false";
         const url =
             "https://www.googleapis.com/drive/v3/files" +
             "?q=" +
             encodeURIComponent(query) +
             "&orderBy=name" +
-            "&fields=files(id,name,mimeType,webViewLink)";
+            "&fields=files(id,name,mimeType,webViewLink,parents)";
         const response =
             await fetch(url, {
                 headers: {
@@ -418,55 +418,84 @@ async function loadDriveFiles(folderId, folderName) {
     }
 }
 
-function displayDriveFiles(files, folderName) {
-    const container = document.getElementById("library");
+function displayDriveFiles(items, folderName) {
+    const container =  document.getElementById("library");
 
     container.innerHTML = "";
-
     const heading = document.createElement("div");
 
     heading.className = "folder";
+
     heading.innerHTML = `
         <span class="folder-icon">📁</span>
         ${escapeHtml(folderName)}
     `;
 
     container.appendChild(heading);
-    if (files.length === 0) {
-        const emptyMessage = document.createElement("div");
+
+    if (items.length === 0) {
+        const emptyMessage =  document.createElement("div");
 
         emptyMessage.className = "document";
 
-        emptyMessage.textContent = "📂 This folder is empty.";
+        emptyMessage.textContent =  "📂 This folder is empty.";
 
         container.appendChild(
-            emptyMessage        );
+            emptyMessage
+        );
         return;
     }
 
-    files.forEach(file => {
+    items.forEach(item => {
+        const element =  document.createElement("div");
+        // --------------------------------
+        // FOLDER
+        // --------------------------------
 
-        const documentElement =
-            document.createElement("div");
+        if (
+            item.mimeType === "application/vnd.google-apps.folder"
+        ) {
 
-        documentElement.className = "document";
-        const link = document.createElement("a");
+            element.className = "folder";
 
-        link.href = file.webViewLink || `https://drive.google.com/file/d/${file.id}/view`;
-        link.target = "_blank";
-        link.rel = "noopener noreferrer";
+            element.innerHTML = `
+                <span class="folder-icon">📁</span>
+                ${escapeHtml(item.name)}
+            `;
+            element.dataset.folderId = item.id;
 
-        link.textContent =
-            `📄 ${file.name}`;
-        documentElement.appendChild(
-            link
-        );
+            element.addEventListener(
+                "click",
+                () => loadDriveFiles(
+                    item.id,
+                    item.name
+                )
+            );
+
+        }
+        // --------------------------------
+        // DOCUMENT
+        // --------------------------------
+        else {
+            element.className = "document";
+            const link =  document.createElement("a");
+
+            link.href = item.webViewLink || `https://drive.google.com/file/d/${item.id}/view`;
+
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+
+            link.textContent =
+                `📄 ${item.name}`;
+            element.appendChild(
+                link
+            );
+        }
         container.appendChild(
-            documentElement
+            element
         );
     });
 }
-
 
 function escapeHtml(text) {
     const div =  document.createElement("div");
