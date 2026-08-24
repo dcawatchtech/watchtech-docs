@@ -1,0 +1,22 @@
+name: Test Python Runner
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-python:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Test Python
+        run: |
+          python --version
+          python -c "print('WatchTech Docs Python runner is working!')"
