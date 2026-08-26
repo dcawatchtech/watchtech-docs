@@ -1,0 +1,28 @@
+name: Test 1 - Drive Tree
+
+on:
+  workflow_dispatch:
+
+jobs:
+  scan-drive:
+    runs-on: ubuntu-latest
+
+    env:
+      GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install google-api-python-client google-auth
+
+      - name: Scan Google Drive
+        run: |
+          python .github/scripts/drive_tree.py
