@@ -1,0 +1,55 @@
+name: Test 3 - Commit One Document
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  commit-one:
+    runs-on: ubuntu-latest
+
+    env:
+      GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install google-api-python-client google-auth
+
+      - name: Download document from Google Drive
+        run: |
+          python .github/scripts/download_one.py
+
+      - name: Copy document into docs
+        run: |
+          mkdir -p "docs/ATM/Procedures"
+
+          cp \
+            "test-download/ATM_01_Automatic Archiving - DVD.pdf" \
+            "docs/ATM/Procedures/ATM_01_Automatic Archiving - DVD.pdf"
+
+      - name: Show repository file
+        run: |
+          ls -lh "docs/ATM/Procedures/"
+
+      - name: Commit document
+        run: |
+          git config user.name "WatchTech Docs Sync"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add "docs/ATM/Procedures/ATM_01_Automatic Archiving - DVD.pdf"
+
+          git commit -m "Test 3: add ATM procedure document" || echo "Nothing to commit"
+
+          git push
