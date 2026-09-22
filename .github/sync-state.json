@@ -12,9 +12,10 @@
       "parent_id": "1A3YXPHpSSg8Yl_B9LOIRLwjw4SrOXSr0",
       "path": "ATM",
       "modifiedTime": "2026-08-17T08:52:06.932Z",
-      "content_fingerprint": "meta:2026-08-17T08:52:06.932Z|size:",
+      "content_fingerprint": "folder",
       "size": "",
-      "kind": "folder"
+      "kind": "folder",
+      "export_mime": null
     },
     "1CEf0JtuU3liT3f0lMW_vq_txEXc2f_FE": {
       "id": "1CEf0JtuU3liT3f0lMW_vq_txEXc2f_FE",
@@ -25,9 +26,10 @@
       "parent_id": "19Di734gPhIepnAuZDtb9Jbc9cZqQFP1d",
       "path": "ATM/Procedures",
       "modifiedTime": "2026-08-18T07:12:20.122Z",
-      "content_fingerprint": "meta:2026-08-18T07:12:20.122Z|size:",
+      "content_fingerprint": "folder",
       "size": "",
-      "kind": "folder"
+      "kind": "folder",
+      "export_mime": null
     },
     "12VsqhTCOw8LFkP93MH-_KtpLaytBsFEK": {
       "id": "12VsqhTCOw8LFkP93MH-_KtpLaytBsFEK",
@@ -40,7 +42,10 @@
       "modifiedTime": "2026-08-18T07:14:11.134Z",
       "content_fingerprint": "md5:c516741b1c004b192e0de3981db8cd83",
       "size": "442496",
-      "kind": "file"
+      "kind": "file",
+      "export_mime": null,
+      "export_label": null,
+      "shortcutDetails": null
     },
     "1Mn6JNoVW9l5OtOt-CKic3BahTL6a3vm1": {
       "id": "1Mn6JNoVW9l5OtOt-CKic3BahTL6a3vm1",
@@ -53,7 +58,10 @@
       "modifiedTime": "2026-08-18T07:14:47.787Z",
       "content_fingerprint": "md5:78e0e0ad1e0e596195cfc5deb91e0fc4",
       "size": "568622",
-      "kind": "file"
+      "kind": "file",
+      "export_mime": null,
+      "export_label": null,
+      "shortcutDetails": null
     },
     "1nf6ZvoWI4hd7Z4aKDPhgtkhRmO3Ie8tQ": {
       "id": "1nf6ZvoWI4hd7Z4aKDPhgtkhRmO3Ie8tQ",
@@ -66,7 +74,10 @@
       "modifiedTime": "2026-08-18T07:21:23.354Z",
       "content_fingerprint": "md5:355840e455e66854e23f098366488b4a",
       "size": "121772",
-      "kind": "file"
+      "kind": "file",
+      "export_mime": null,
+      "export_label": null,
+      "shortcutDetails": null
     },
     "1Q1RahvEPoxLwXjIHSAFcn9G1MP3KcsAV": {
       "id": "1Q1RahvEPoxLwXjIHSAFcn9G1MP3KcsAV",
@@ -79,7 +90,10 @@
       "modifiedTime": "2026-08-18T07:20:43.325Z",
       "content_fingerprint": "md5:ed9c632b1c87d9022d58b57eef7b3d5e",
       "size": "361475",
-      "kind": "file"
+      "kind": "file",
+      "export_mime": null,
+      "export_label": null,
+      "shortcutDetails": null
     },
     "1yweQw7M_nRd9NfswqgaWdoaBzs9B-Sog": {
       "id": "1yweQw7M_nRd9NfswqgaWdoaBzs9B-Sog",
@@ -92,7 +106,10 @@
       "modifiedTime": "2026-08-18T07:18:59.812Z",
       "content_fingerprint": "md5:9d2dd9c7494002ffd9f9f53130068511",
       "size": "766306",
-      "kind": "file"
+      "kind": "file",
+      "export_mime": null,
+      "export_label": null,
+      "shortcutDetails": null
     },
     "1EBUlxaVd-xv44VV8WqCcjUPkLJ7M4_M3": {
       "id": "1EBUlxaVd-xv44VV8WqCcjUPkLJ7M4_M3",
@@ -105,7 +122,10 @@
       "modifiedTime": "2026-08-18T07:16:57.854Z",
       "content_fingerprint": "md5:e39863b1d815b5385c72858d17653600",
       "size": "2194022",
-      "kind": "file"
+      "kind": "file",
+      "export_mime": null,
+      "export_label": null,
+      "shortcutDetails": null
     },
     "1eDiE7O2PjBzeAZG76h7tkXQQRQUKDFWs": {
       "id": "1eDiE7O2PjBzeAZG76h7tkXQQRQUKDFWs",
@@ -118,7 +138,10 @@
       "modifiedTime": "2026-08-18T07:17:33.478Z",
       "content_fingerprint": "md5:421b5ccc0f5a095b925c88fd424ab971",
       "size": "422185",
-      "kind": "file"
+      "kind": "file",
+      "export_mime": null,
+      "export_label": null,
+      "shortcutDetails": null
     },
     "19rLOu00xhf6Jn6yfdtDP6ck5S9lpHVvl": {
       "id": "19rLOu00xhf6Jn6yfdtDP6ck5S9lpHVvl",
@@ -131,7 +154,10 @@
       "modifiedTime": "2026-08-10T09:13:08.963Z",
       "content_fingerprint": "md5:20c06a945865f778254ccef16a2e3fa1",
       "size": "1068158",
-      "kind": "file"
+      "kind": "file",
+      "export_mime": null,
+      "export_label": null,
+      "shortcutDetails": null
     },
     "1z1aUwOHYXQ9BjKvXWRJNEVXEEb_6Jk_A": {
       "id": "1z1aUwOHYXQ9BjKvXWRJNEVXEEb_6Jk_A",
@@ -144,7 +170,10 @@
       "modifiedTime": "2026-08-18T07:23:07.471Z",
       "content_fingerprint": "md5:062f7aa6c959faba2a840cea8a8bb9ba",
       "size": "1411052",
-      "kind": "file"
+      "kind": "file",
+      "export_mime": null,
+      "export_label": null,
+      "shortcutDetails": null
     },
     "1TAm7Dy99o6B6DcOv6uYiqSsm9bxWZXG4": {
       "id": "1TAm7Dy99o6B6DcOv6uYiqSsm9bxWZXG4",
@@ -157,7 +186,26 @@
       "modifiedTime": "2026-08-14T06:30:55.000Z",
       "content_fingerprint": "md5:87ff0c754075b4d8065f79f4e0f7f8a3",
       "size": "2545846",
-      "kind": "file"
+      "kind": "file",
+      "export_mime": null,
+      "export_label": null,
+      "shortcutDetails": null
+    },
+    "1RqKh9dqT927EpE6Z7HmHLkj3Cm2WKPYC82u1iz7Ql0o": {
+      "id": "1RqKh9dqT927EpE6Z7HmHLkj3Cm2WKPYC82u1iz7Ql0o",
+      "name": "logentry",
+      "safe_name": "logentry",
+      "output_name": "logentry.docx",
+      "mimeType": "application/vnd.google-apps.document",
+      "parent_id": "1A3YXPHpSSg8Yl_B9LOIRLwjw4SrOXSr0",
+      "path": "logentry.docx",
+      "modifiedTime": "2026-09-22T08:55:43.257Z",
+      "content_fingerprint": "meta:2026-09-22T08:55:43.257Z|version:14|size:6505|output:logentry.docx|export:application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "size": "6505",
+      "kind": "file",
+      "export_mime": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "export_label": "Google Doc",
+      "shortcutDetails": null
     },
     "1arTscVV3_JeF0DNq6bjs56WssdOH6hmA": {
       "id": "1arTscVV3_JeF0DNq6bjs56WssdOH6hmA",
@@ -170,7 +218,10 @@
       "modifiedTime": "2026-07-23T10:24:51.610Z",
       "content_fingerprint": "md5:2a41809a3f8b93d7318261382e01cffa",
       "size": "480943",
-      "kind": "file"
+      "kind": "file",
+      "export_mime": null,
+      "export_label": null,
+      "shortcutDetails": null
     }
   }
 }
