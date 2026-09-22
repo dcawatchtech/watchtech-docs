@@ -191,36 +191,6 @@
       "export_label": null,
       "shortcutDetails": null
     },
-    "1r7ddiZ8-AU8vZ1cC9MQiG7jOXvucC8hp": {
-      "id": "1r7ddiZ8-AU8vZ1cC9MQiG7jOXvucC8hp",
-      "name": "test-folder",
-      "safe_name": "test-folder",
-      "output_name": "test-folder",
-      "mimeType": "application/vnd.google-apps.folder",
-      "parent_id": "1A3YXPHpSSg8Yl_B9LOIRLwjw4SrOXSr0",
-      "path": "test-folder",
-      "modifiedTime": "2026-09-22T09:57:10.220Z",
-      "content_fingerprint": "folder",
-      "size": "",
-      "kind": "folder",
-      "export_mime": null
-    },
-    "1XzvSFydDOqlZWNojCmqB4AmK5C3Ojw2de644CEgrYw4": {
-      "id": "1XzvSFydDOqlZWNojCmqB4AmK5C3Ojw2de644CEgrYw4",
-      "name": "Untitled document",
-      "safe_name": "Untitled document",
-      "output_name": "Untitled document.docx",
-      "mimeType": "application/vnd.google-apps.document",
-      "parent_id": "1r7ddiZ8-AU8vZ1cC9MQiG7jOXvucC8hp",
-      "path": "test-folder/Untitled document.docx",
-      "modifiedTime": "2026-09-22T09:57:32.447Z",
-      "content_fingerprint": "meta:2026-09-22T09:57:32.447Z|version:7|size:1024|output:Untitled document.docx|export:application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      "size": "1024",
-      "kind": "file",
-      "export_mime": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      "export_label": "Google Doc",
-      "shortcutDetails": null
-    },
     "1arTscVV3_JeF0DNq6bjs56WssdOH6hmA": {
       "id": "1arTscVV3_JeF0DNq6bjs56WssdOH6hmA",
       "name": "logentry_renamed-1344lt.pdf",
