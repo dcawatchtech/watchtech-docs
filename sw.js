@@ -1,6 +1,6 @@
 const CACHE_NAME = "watchtech-docs-v1";
 const APP_SHELL = [
-  "./",
+  "/",
   "index.html",
   "style.css",
   "app.js",
@@ -35,6 +35,6 @@ self.addEventListener("fetch", (event) => {
         }
         return response;
       })
-      .catch(() => caches.match(request).then((cached) => cached || caches.match("./index.html")))
+      .catch(() => caches.match(request).then((cached) => cached || caches.match("/index.html")))
   );
 });
