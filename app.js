@@ -328,7 +328,24 @@
   }
 
   async function getCache() { if (!("caches" in window)) return null; return caches.open(DOC_CACHE); }
+  
+  async function requestPersistentStorage() {
+    if (!navigator.storage?.persist) return;  
+    try {
+      const alreadyPersistent = await navigator.storage.persisted();  
+      if (alreadyPersistent) { console.log("✅ WatchTech storage is already persistent.");        return;
+      }
+      const granted = await navigator.storage.persist();  
+      console.log(
+        granted
+          ? "✅ WatchTech persistent storage granted."
+          : "ℹ️ WatchTech persistent storage not granted."
+      );
+    } catch (error) { console.warn("Persistent storage request failed:", error);
+    }
+  }
 
+  
   async function cacheAllDocs() {
     if (!state.index) return;
     const cache = await getCache(); if (!cache) throw new Error("Cache API unavailable");
@@ -390,5 +407,6 @@
   initEvents();
   initInstallPrompt();
   registerServiceWorker();
+  requestPersistentStorage();
   loadIndex();
 })();
