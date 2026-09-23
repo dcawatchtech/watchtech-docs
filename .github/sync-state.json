@@ -251,22 +251,6 @@
       "kind": "folder",
       "export_mime": null
     },
-    "1t9p9v3Pxs8lEe49iSj5UzrtANDlq_c6y": {
-      "id": "1t9p9v3Pxs8lEe49iSj5UzrtANDlq_c6y",
-      "name": "VCS_01.pdf",
-      "safe_name": "VCS_01.pdf",
-      "output_name": "VCS_01.pdf",
-      "mimeType": "application/pdf",
-      "parent_id": "18Vp6Bz7hVL1mfod3_mt5TRAzB8ni42qP",
-      "path": "VCS/VCS_01.pdf",
-      "modifiedTime": "2026-09-21T04:43:45.806Z",
-      "content_fingerprint": "md5:4647b15a0ad2b8d8e8d2a9b0c8237e6e",
-      "size": "154808",
-      "kind": "file",
-      "export_mime": null,
-      "export_label": null,
-      "shortcutDetails": null
-    },
     "1arTscVV3_JeF0DNq6bjs56WssdOH6hmA": {
       "id": "1arTscVV3_JeF0DNq6bjs56WssdOH6hmA",
       "name": "logentry_renamed-1344lt.pdf",

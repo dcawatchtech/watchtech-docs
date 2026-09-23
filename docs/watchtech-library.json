@@ -1,9 +1,9 @@
 {
   "version": 1,
   "root": "1A3YXPHpSSg8Yl_B9LOIRLwjw4SrOXSr0",
-  "generated_at": "2026-09-23T07:05:23.532898Z",
+  "generated_at": "2026-09-23T13:11:23.584267Z",
   "folders": 4,
-  "files": 14,
+  "files": 13,
   "items": [
     {
       "id": "19Di734gPhIepnAuZDtb9Jbc9cZqQFP1d",
@@ -152,15 +152,6 @@
       "kind": "file",
       "mimeType": "application/pdf",
       "modifiedTime": "2026-09-22T09:44:57.058Z",
-      "export_label": null
-    },
-    {
-      "id": "1t9p9v3Pxs8lEe49iSj5UzrtANDlq_c6y",
-      "name": "VCS_01.pdf",
-      "path": "VCS/VCS_01.pdf",
-      "kind": "file",
-      "mimeType": "application/pdf",
-      "modifiedTime": "2026-09-21T04:43:45.806Z",
       "export_label": null
     }
   ]
