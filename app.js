@@ -402,7 +402,7 @@ async function loadIndex() {
     }
     els.offlineText.textContent = "Offline library ready"; els.offlineMeta.textContent = `${files.length} documents cached on this device`; showToast("WatchTech Docs is ready for offline use");
   }
-*/
+
 async function cacheAllDocs() {
   if (!state.index) return;
   const cache = await getCache();
@@ -441,7 +441,103 @@ async function cacheAllDocs() {
 
   showToast("WatchTech Docs is ready for offline use");
 }
-  
+
+*/  
+async function cacheAllDocs() {
+  if (!state.index) {
+    showToast("Library is not loaded yet");
+    return;
+  }
+
+  const cache = await getCache();
+  if (!cache) {
+    throw new Error("Cache API unavailable");
+  }
+
+  // Ask the browser to protect WatchTech's stored documents.
+  await requestPersistentStorage();
+
+  // Always cache the current library index as part of the offline package.
+  const indexUrl = baseUrl(INDEX_PATH);
+  const indexResponse = await fetch(indexUrl, { cache: "no-store" });
+
+  if (!indexResponse.ok) {
+    throw new Error(`Library index returned ${indexResponse.status}`);
+  }
+
+  await cache.put(indexUrl, indexResponse.clone());
+  const files = state.index.items.filter((item) => item.kind === "file");
+
+  let cachedCount = 0;
+  let downloadedCount = 0;
+  let failedCount = 0;
+  const failures = [];
+
+  els.offlineText.textContent = "Preparing offline…";
+  els.offlineMeta.textContent = `Checking 0 / ${files.length} documents`;
+
+  for (const item of files) { const url = relativePathToUrl(item.path);
+
+    try {
+      // Reuse the local copy when it already exists.
+      const existing = await cache.match(url);
+      if (existing) { cachedCount += 1;
+      } else {
+        if (!navigator.onLine) { throw new Error("Device is offline");
+        }
+        const response = await fetch(url, { cache: "no-store" });
+
+        if (!response.ok) { throw new Error(`HTTP ${response.status}`);
+        }
+
+        await cache.put(url, response.clone());
+        cachedCount += 1;
+        downloadedCount += 1;
+      }
+    } catch (error) {
+      failedCount += 1;
+      failures.push(`${item.name}: ${error.message}`);
+      console.warn("Offline cache failed:", item.path, error);
+    }
+
+    els.offlineMeta.textContent =
+      `${cachedCount} / ${files.length} documents ready`;
+  }
+
+  // Measure browser storage after caching.
+  let storageText = "";
+
+  try {
+    if (navigator.storage?.estimate) {
+      const estimate = await navigator.storage.estimate();
+
+      if (estimate.usage != null) {
+        const mb = estimate.usage / (1024 * 1024);
+        storageText = ` · ${mb.toFixed(1)} MB used`;
+      }
+    }
+  } catch (error) {
+    console.warn("Storage estimate unavailable:", error);
+  }
+
+  if (failedCount === 0 && cachedCount === files.length) {
+    els.offlineText.textContent = "Offline library ready";
+    els.offlineMeta.textContent =
+      `${cachedCount} / ${files.length} documents ready${storageText}`;
+
+    showToast( downloadedCount > 0  ? `${downloadedCount} new documents stored locally` : "All documents were already stored locally");
+    return;
+  }
+
+  els.offlineText.textContent = "Offline library incomplete";
+  els.offlineMeta.textContent = `${cachedCount} / ${files.length} documents ready · ${failedCount} failed`;
+
+  if (failedCount > 0) {
+    console.error("Offline caching failures:", failures);
+    showToast(`${failedCount} document(s) could not be stored`);
+  }
+}
+
   async function checkOfflineCache() {
     const cache = await getCache(); if (!cache || !state.index) return;
     const keys = await cache.keys(); const filePaths = state.index.items.filter((i) => i.kind === "file").map((i) => relativePathToUrl(i.path));
