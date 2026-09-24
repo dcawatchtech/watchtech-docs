@@ -8,6 +8,7 @@ const APP_SHELL = [
   "icon.svg",
   "icon-192.png",
   "icon-512.png",
+  "docs/watchtech-library.json",
 ];
 
 self.addEventListener("install", (event) => {
