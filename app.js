@@ -305,7 +305,7 @@
       viewerShellMessage("Document unavailable", error.message || "The file could not be retrieved.");
     }
   }
-
+/*
   async function loadIndex() {
     els.content.innerHTML = `<div class="card skeleton"></div><div class="card skeleton"></div><div class="card skeleton"></div>`;
     try {
@@ -322,6 +322,50 @@
       showToast("Could not load the synchronized library"); console.error(error);
     }
   }
+*/
+async function readCachedIndex() {
+  const cache = await getCache();
+  if (!cache) return null;
+  const cached = await cache.match(baseUrl(INDEX_PATH));
+  if (!cached) return null;
+  const index = await cached.json();
+  if (!Array.isArray(index.items)) {throw new Error("Invalid cached library index");  }
+  return index;
+}
+
+async function loadIndex() {
+  els.content.innerHTML = `<div class="card skeleton"></div><div class="card skeleton"></div><div class="card skeleton"></div>`;
+  try {
+    let index = null;
+    // Offline-first: use the locally cached library index when available.
+    try {
+      index = await readCachedIndex();
+    } catch (error) {
+      console.warn("Cached library index unavailable:", error);
+    }
+    if (!index) {
+      const response = await fetch(baseUrl(INDEX_PATH), { cache: "no-store" });
+      if (!response.ok) {throw new Error(`Library index returned ${response.status}`);      }
+      index = await response.clone().json();
+      const cache = await getCache();
+      if (cache) {await cache.put(baseUrl(INDEX_PATH), response);      }
+    }
+    state.index = index;
+    if (!Array.isArray(state.index.items)) {throw new Error("Invalid library index");    }
+    els.folderStat.textContent = String(state.index.folders ?? state.index.items.filter((x) => x.kind === "folder").length);
+    els.fileStat.textContent = String(state.index.files ?? state.index.items.filter((x) => x.kind === "file").length);
+    els.syncStat.textContent = formatDate(state.index.generated_at);
+
+    renderContent();
+    renderSearch();
+    updateConnection();
+    checkOfflineCache().catch(() => {});
+  } catch (error) {
+    els.content.innerHTML = `<div class="empty-state"><strong>Library index unavailable</strong>Run the WatchTech Drive Sync once so the PWA can load the synchronized library.</div>`;
+    showToast("Could not load the synchronized library");
+    console.error(error);
+  }
+}
 
   function updateConnection() {
     const online = navigator.onLine; els.connectionText.textContent = online ? "Online" : "Offline mode"; els.connectionDot.style.background = online ? "var(--success)" : "#e7a13d";
@@ -345,10 +389,10 @@
     }
   }
 
-  
+ /* -- backup of all cachedAllDocs ---
   async function cacheAllDocs() {
     if (!state.index) return;
-    const cache = await getCache(); if (!cache) throw new Error("Cache API unavailable");
+    const cache = await getCache(); if (!cache) throw new Error("Cache API unavailable");    
     const files = state.index.items.filter((item) => item.kind === "file");
     let done = 0;
     els.offlineText.textContent = "Preparing offline…"; els.offlineMeta.textContent = `0 / ${files.length} documents`;
@@ -358,7 +402,46 @@
     }
     els.offlineText.textContent = "Offline library ready"; els.offlineMeta.textContent = `${files.length} documents cached on this device`; showToast("WatchTech Docs is ready for offline use");
   }
+*/
+async function cacheAllDocs() {
+  if (!state.index) return;
+  const cache = await getCache();
+  if (!cache) throw new Error("Cache API unavailable");
 
+  // Cache the library index as part of the offline package.
+  const indexUrl = baseUrl(INDEX_PATH);
+  const indexResponse = await fetch(indexUrl, { cache: "no-store" });
+
+  if (!indexResponse.ok) { throw new Error(`Library index returned ${indexResponse.status}`);  }
+  await cache.put(indexUrl, indexResponse.clone());
+  const files = state.index.items.filter((item) => item.kind === "file");
+
+  let done = 0;
+
+  els.offlineText.textContent = "Preparing offline…";
+  els.offlineMeta.textContent = `0 / ${files.length} documents`;
+
+  for (const item of files) {
+    try {
+      const url = relativePathToUrl(item.path);
+      const response = await fetch(url, { cache: "no-store" });
+
+      if (!response.ok) { throw new Error(`HTTP ${response.status} for ${item.path}`);      }
+      await cache.put(url, response.clone());
+    } finally {
+      done += 1;
+      els.offlineMeta.textContent =
+        `${done} / ${files.length} documents`;
+    }
+  }
+
+  els.offlineText.textContent = "Offline library ready";
+  els.offlineMeta.textContent =
+    `${files.length} documents cached on this device`;
+
+  showToast("WatchTech Docs is ready for offline use");
+}
+  
   async function checkOfflineCache() {
     const cache = await getCache(); if (!cache || !state.index) return;
     const keys = await cache.keys(); const filePaths = state.index.items.filter((i) => i.kind === "file").map((i) => relativePathToUrl(i.path));
