@@ -190,7 +190,7 @@
     const files = childFiles(state.currentPath);
     els.sectionKicker.textContent = state.currentPath ? "Folder" : "Library";
     els.sectionTitle.textContent = state.currentPath ? displayName(state.currentPath) : "All folders & documents";
-    els.pageTitle.textContent = state.currentPath ? displayName(state.currentPath) : "Welcome to WatchTech Docs";
+    els.pageTitle.textContent = state.currentPath ? displayName(state.currentPath) : "Welcome to Watch Technician's Documentations";
     els.pageDescription.textContent = state.currentPath ? `Browse the documents and subfolders inside ${displayName(state.currentPath)}.` : "Your synchronized technical library, designed for fast browsing, search and offline access.";
     els.content.classList.toggle("list-mode", state.view === "list");
     els.content.innerHTML = "";
