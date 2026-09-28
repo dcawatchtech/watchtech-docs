@@ -1,4 +1,4 @@
-const APP_CACHE = "watchtech-app-v8";
+const APP_CACHE = "watchtech-app-v9";
 const DOCUMENT_CACHE = "watchtech-files-v1";
 
 const APP_SHELL = [
