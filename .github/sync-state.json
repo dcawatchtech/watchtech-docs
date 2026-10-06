@@ -295,6 +295,38 @@
       "kind": "folder",
       "export_mime": null
     },
+    "1mTQ6nxD1utydaiev9D5emnI-ZIU1yZic": {
+      "id": "1mTQ6nxD1utydaiev9D5emnI-ZIU1yZic",
+      "name": "NTP_Switch_connections_details3.pdf",
+      "safe_name": "NTP_Switch_connections_details3.pdf",
+      "output_name": "NTP_Switch_connections_details3.pdf",
+      "mimeType": "application/pdf",
+      "parent_id": "1UopOlVX19iLQ2SjvVVbh0ucfdKWLnp9z",
+      "path": "GPS-CLOCK/NTP_Switch_connections_details3.pdf",
+      "modifiedTime": "2026-07-01T07:10:09.608Z",
+      "content_fingerprint": "md5:3927f9fcbfc95b37c76d313b2b08e876",
+      "size": "198224",
+      "kind": "file",
+      "export_mime": null,
+      "export_label": null,
+      "shortcutDetails": null
+    },
+    "1QCnB5y89NtNTH-mmpKoAEa_D58kylD4D": {
+      "id": "1QCnB5y89NtNTH-mmpKoAEa_D58kylD4D",
+      "name": "NTP_Switch_Schematics_connections_03Jul2026.pdf",
+      "safe_name": "NTP_Switch_Schematics_connections_03Jul2026.pdf",
+      "output_name": "NTP_Switch_Schematics_connections_03Jul2026.pdf",
+      "mimeType": "application/pdf",
+      "parent_id": "1UopOlVX19iLQ2SjvVVbh0ucfdKWLnp9z",
+      "path": "GPS-CLOCK/NTP_Switch_Schematics_connections_03Jul2026.pdf",
+      "modifiedTime": "2026-07-03T05:37:10.129Z",
+      "content_fingerprint": "md5:adb282a2b37a300b1d1f8bfca2501be8",
+      "size": "47913",
+      "kind": "file",
+      "export_mime": null,
+      "export_label": null,
+      "shortcutDetails": null
+    },
     "1qYJLKjEfSHyTbqLwJGF-wqjB1OVwDff4": {
       "id": "1qYJLKjEfSHyTbqLwJGF-wqjB1OVwDff4",
       "name": "ILS",
