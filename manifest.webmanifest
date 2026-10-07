@@ -4,7 +4,6 @@
   "description": "WatchTech technical documentation library.",
   "start_url": "./",
   "scope": "./",
-/* "display": "standalone", */
   "display": "fullscreen",
   "orientation": "any",
   "background_color": "#09111f",
