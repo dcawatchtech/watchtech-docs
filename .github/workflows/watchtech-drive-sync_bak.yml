@@ -3,7 +3,7 @@ name: WatchTech Drive Sync
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 * * * *'
+    - cron: '27 * * * *'
 
 permissions:
   contents: write
