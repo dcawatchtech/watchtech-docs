@@ -334,6 +334,76 @@ async function readCachedIndex() {
 }
 
 async function loadIndex() {
+  els.content.innerHTML =
+    `<div class="card skeleton"></div>` +
+    `<div class="card skeleton"></div>` +
+    `<div class="card skeleton"></div>`;
+  try {
+    let index = null;
+
+    // ONLINE: always try the newest Backend-synchronized library first.
+    if (navigator.onLine) {
+      try {
+        const response = await fetch(baseUrl(INDEX_PATH), {
+          cache: "no-store"
+        });
+
+        if (!response.ok) {
+          throw new Error(`Library index returned ${response.status}`);
+        }
+
+        index = await response.clone().json();
+
+        // Keep the newest index available for offline use.
+        const cache = await getCache();
+        if (cache) {
+          await cache.put(baseUrl(INDEX_PATH), response);
+        }
+      } catch (error) {
+        console.warn("Online library refresh failed; using cached index.", error );
+      }
+    }
+    // OFFLINE or network failure: use the last local copy.
+    if (!index) {
+      index = await readCachedIndex();
+    }
+
+    if (!index || !Array.isArray(index.items)) {
+      throw new Error("Valid library index unavailable");
+    }
+
+    state.index = index;
+
+    els.folderStat.textContent = String(
+      state.index.folders ??
+      state.index.items.filter((x) => x.kind === "folder").length
+    );
+
+    els.fileStat.textContent = String(
+      state.index.files ??
+      state.index.items.filter((x) => x.kind === "file").length
+    );
+
+    els.syncStat.textContent =
+      formatDate(state.index.generated_at);
+
+    renderContent();
+    renderSearch();
+    updateConnection();
+    checkOfflineCache().catch(() => {});
+  } catch (error) {
+    els.content.innerHTML =
+      `<div class="empty-state">
+        <strong>Library index unavailable</strong>
+        Run the WatchTech Backend Sync once so the PWA can load the synchronized library.
+      </div>`;
+
+    showToast("Could not load the synchronized library");
+    console.error(error);
+  }
+}
+/* 
+async function loadIndex() {
   els.content.innerHTML = `<div class="card skeleton"></div><div class="card skeleton"></div><div class="card skeleton"></div>`;
   try {
     let index = null;
@@ -366,6 +436,7 @@ async function loadIndex() {
     console.error(error);
   }
 }
+*/
 
   function updateConnection() {
     const online = navigator.onLine; els.connectionText.textContent = online ? "Online" : "Offline mode"; els.connectionDot.style.background = online ? "var(--success)" : "#e7a13d";
