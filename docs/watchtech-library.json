@@ -1,9 +1,9 @@
 {
   "version": 1,
   "root": "1A3YXPHpSSg8Yl_B9LOIRLwjw4SrOXSr0",
-  "generated_at": "2026-10-14T11:08:01.095215Z",
+  "generated_at": "2026-10-14T11:59:17.872637Z",
   "folders": 8,
-  "files": 20,
+  "files": 19,
   "items": [
     {
       "id": "19Di734gPhIepnAuZDtb9Jbc9cZqQFP1d",
@@ -229,15 +229,6 @@
       "kind": "file",
       "mimeType": "application/pdf",
       "modifiedTime": "2026-09-22T09:44:57.058Z",
-      "export_label": null
-    },
-    {
-      "id": "1ABAepSW1ajnjU4QjsjUEfdu1mlXBl8kO",
-      "name": "Copy of vcs-phonebook2026-10-08.pdf",
-      "path": "VCS/Copy of vcs-phonebook2026-10-08.pdf",
-      "kind": "file",
-      "mimeType": "text/csv",
-      "modifiedTime": "2026-10-12T09:35:22.242Z",
       "export_label": null
     },
     {

@@ -387,22 +387,6 @@
       "kind": "folder",
       "export_mime": null
     },
-    "1ABAepSW1ajnjU4QjsjUEfdu1mlXBl8kO": {
-      "id": "1ABAepSW1ajnjU4QjsjUEfdu1mlXBl8kO",
-      "name": "Copy of vcs-phonebook2026-10-08.pdf",
-      "safe_name": "Copy of vcs-phonebook2026-10-08.pdf",
-      "output_name": "Copy of vcs-phonebook2026-10-08.pdf",
-      "mimeType": "text/csv",
-      "parent_id": "18Vp6Bz7hVL1mfod3_mt5TRAzB8ni42qP",
-      "path": "VCS/Copy of vcs-phonebook2026-10-08.pdf",
-      "modifiedTime": "2026-10-12T09:35:22.242Z",
-      "content_fingerprint": "md5:2bc025bbdc1e4761cfe2ad5402067423",
-      "size": "9148",
-      "kind": "file",
-      "export_mime": null,
-      "export_label": null,
-      "shortcutDetails": null
-    },
     "1ZrY_C4cD25Hv4cFuirsUymuXfPyWxizN": {
       "id": "1ZrY_C4cD25Hv4cFuirsUymuXfPyWxizN",
       "name": "vcs-phonebook2026-10-08.csv",
