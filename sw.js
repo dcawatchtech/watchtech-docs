@@ -33,6 +33,9 @@ function isDocumentUrl(url) {
     url.pathname !== libraryPath
   );
 }
+function isLibraryIndexUrl(url) {
+  return url.href === appUrl("docs/watchtech-library.json");
+}
 
 /*
  * Download the current frontend files from the server.
@@ -45,8 +48,7 @@ function isDocumentUrl(url) {
 async function refreshAppShell() {
   if (refreshPromise) return refreshPromise;
 
-  refreshPromise = (async () => {
-    const cache = await caches.open(APP_CACHE);
+  refreshPromise = (async () => {const cache = await caches.open(APP_CACHE);
 
     for (const path of APP_SHELL) {
       const url = appUrl(path);
@@ -214,7 +216,45 @@ self.addEventListener("fetch", (event) => {
 
     return;
   }
+/*
+ * LIBRARY INDEX
+ *
+ * ONLINE  -> newest Backend index
+ * OFFLINE -> last cached index
+ */
+if (isLibraryIndexUrl(url)) {
+  event.respondWith(
+    (async () => {
+      const cache = await caches.open(APP_CACHE);
 
+      try {
+        const response = await fetch(
+          new Request(url, {
+            method: "GET",
+            cache: "no-store",
+            credentials: "same-origin",
+          })
+        );
+
+        if (response.ok) {
+          await cache.put(url, response.clone());
+        }
+
+        return response;
+      } catch (error) {
+        const cached = await cache.match(url);
+
+        if (cached) {
+          return cached;
+        }
+
+        throw error;
+      }
+    })()
+  );
+
+  return;
+}
 
   /*
    * DOCUMENTS
